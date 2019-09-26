@@ -8,6 +8,7 @@ def game_over():
 
     game_over_text = True
     Main.LEVEL = 1
+    Main.NEW_PLAYER = True
     pygame.mixer.music.stop()
 
     font1 = pygame.font.SysFont('comicsans', 200)
@@ -23,7 +24,7 @@ def game_over():
     Main.win.blit(description, ((Main.screenWidth - description.get_width()) / 2, Main.screenHeight / 1.5))
 
     scores = Scores()
-    scores.save_score(['Player', str(Main.SCORE)])
+    scores.save_score([Main.PLAYER_NAME, str(Main.SCORE)])
 
     Main.SCORE = 0
     pygame.display.update()

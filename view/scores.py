@@ -41,7 +41,6 @@ class Scores(object):
     def save_score(self, record):
         self.list_of_scores.append(record)
         self.list_of_scores.sort(key=lambda record: int(record[1]), reverse=True)
-        self.list_of_scores.pop(10)
         self.write_scores()
 
     def read_scores(self):

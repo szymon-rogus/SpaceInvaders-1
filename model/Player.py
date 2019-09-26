@@ -10,7 +10,7 @@ class Player(object):
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 5  # velocity of ship
+        self.vel = 6  # velocity of ship
         self.health = 3
         self.killed = False
         self.protection = False

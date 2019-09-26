@@ -2,6 +2,7 @@ import sys
 import pygame
 import random
 import Main
+import tkinter as tk
 from model.Boss import Boss
 from model.Cover import Cover
 from model.Player import Player
@@ -11,8 +12,8 @@ from view.description import description_of_game
 from view.game_over import game_over
 from view.object_draw import draw_block_of_enemies
 from view.life_draw import life_draw
-from view.next_level import you_win
 from view.scores import Scores
+from view.next_level import you_win
 
 pygame.init()
 
@@ -47,7 +48,6 @@ def button(message, x, y, w, h, color, mouse_hover, action=None):
 def menu():
     intro = True
     pygame.mixer.music.stop()
-    Main.win.blit(Main.bg, (0, 0))
     while intro:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -119,15 +119,15 @@ def redraw_game_window(player, enemy, special_alien, projectiles, enemy_projecti
             if boss.time_to_recovery == 0:
                 boss.protected = False
 
-    if alive < 1:
-        you_win()
-    else:
+    if alive >= 1:
         life_count = player.health
         for life in lives:
-            life.draw(Main.win)
             life_count -= 1
-            if life_count < 1:
-                break
+            if life_count < 0:
+                life.status = False
+            life.draw(Main.win)
+    else:
+        you_win()
 
     # display score
     score = pygame.font.SysFont('comicsans', 50)
@@ -151,6 +151,33 @@ def main_loop():
     # Ship can shoot only if this variable is equal to 0. After every successful shoot this variable is incremented,
     # and if reaches 10, then is reduced again to 0. This feature prevent from shooting all projectiles at once
     # which can cause undesirable blurred trail on screen
+    if Main.NEW_PLAYER:
+        root = tk.Tk()
+        root.title('Player Name')
+        root.geometry('300x150+500+300')
+
+        canvas = tk.Canvas(root, width=300, height=150,  relief='raised')
+        canvas.pack()
+
+        label = tk.Label(root, text='Type your Name:')
+        label.config(font=('helvetica', 12))
+        canvas.create_window(150, 50, window=label)
+
+        entry = tk.Entry(root)
+        canvas.create_window(150, 80, window=entry)
+
+        def get_square_root():
+            x1 = entry.get()
+            Main.PLAYER_NAME = x1
+            root.destroy()
+
+        button = tk.Button(text='Ok', command=get_square_root, bg='brown', fg='white', font=('helvetica', 9, 'bold'))
+        canvas.create_window(150, 120, window=button)
+
+        root.mainloop()
+
+        Main.NEW_PLAYER = False
+
     can_shoot = 0
     number = random.randint(1, 5)
     Main.bg = pygame.image.load('../model/img/big_sky' + str(number) + '.jpg')
@@ -184,7 +211,7 @@ def main_loop():
     pygame.mixer.music.rewind()
     pygame.mixer.music.play()
 
-    if Main.LEVEL == 3:
+    if Main.LEVEL == 5:
         Main.BOSS = True
     else:
         Main.BOSS = False
@@ -276,7 +303,7 @@ def main_loop():
                 projectiles.pop(projectiles.index(projectile))
         if can_shoot > 0:
             can_shoot += 1
-        if can_shoot >= 20:
+        if can_shoot >= 21 - Main.LEVEL:
             can_shoot = 0
 
         # handle keys pressed by player (left arrow, right arrow, space)
@@ -287,7 +314,7 @@ def main_loop():
             player.x += player.vel
         if keys[pygame.K_SPACE] and can_shoot == 0 and not player.protection:
             Main.shoot.play()
-            if len(projectiles) < 10:  # up to 10 projectiles on screen at the same moment
+            if len(projectiles) < 12:  # up to 10 projectiles on screen at the same moment
                 projectiles.append(Projectile(round(player.x + player.width // 2),
                                               round(player.y + player.height // 2), 4, (255, 128, 0), 10))
             can_shoot += 1

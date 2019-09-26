@@ -5,6 +5,8 @@ SCORE = 0
 LEVEL = 1
 SPECIAL = 0
 BOSS = False
+NEW_PLAYER = True
+PLAYER_NAME = None
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

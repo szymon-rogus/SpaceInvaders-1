@@ -12,4 +12,5 @@ class Life(object):
         self.status = True
 
     def draw(self, win):
-        win.blit(self.life, (self.x, self.y))
+        if self.status is True:
+            win.blit(self.life, (self.x, self.y))
