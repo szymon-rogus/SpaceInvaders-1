@@ -6,7 +6,6 @@ from view.scores import Scores
 
 def game_over():
 
-    game_over_text = True
     Main.LEVEL = 1
     Main.NEW_PLAYER = True
     pygame.mixer.music.stop()
@@ -29,12 +28,11 @@ def game_over():
     Main.SCORE = 0
     pygame.display.update()
 
-    while game_over_text:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
-            game_over_text = False
             return

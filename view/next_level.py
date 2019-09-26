@@ -6,7 +6,6 @@ from view.scores import Scores
 
 def you_win():
 
-    win = True
     Main.LEVEL += 1
 
     font1 = pygame.font.SysFont('comicsans', 150)
@@ -24,20 +23,18 @@ def you_win():
     # Main.SCORE = 0
     pygame.display.update()
 
-    while win:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
-            win = False
             return
 
 
 def victory():
 
-    win = True
     Main.NEW_PLAYER = True
     Main.LEVEL = 1
 
@@ -59,7 +56,7 @@ def victory():
     Main.SCORE = 0
     pygame.display.update()
 
-    while win:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -67,6 +64,5 @@ def victory():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             # should actually show credits or final score and go back to menu then
-            win = False
             from Main.main import menu
             menu()
