@@ -128,6 +128,7 @@ def redraw_game_window(player, enemy, special_alien, projectiles, enemy_projecti
             life.draw(Main.win)
     else:
         you_win()
+        main_loop()
 
     # display score
     score = pygame.font.SysFont('comicsans', 50)
@@ -141,6 +142,7 @@ def redraw_game_window(player, enemy, special_alien, projectiles, enemy_projecti
 
     if player.health < 1:
         game_over()
+        menu()
 
     pygame.display.update()
 

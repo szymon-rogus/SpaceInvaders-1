@@ -10,7 +10,7 @@ def you_win():
     Main.LEVEL += 1
 
     font1 = pygame.font.SysFont('comicsans', 150)
-    title = font1.render("Victory!", 1, Main.RED)
+    title = font1.render("Victory", 1, Main.RED)
     Main.win.blit(title, ((Main.screenWidth - title.get_width()) / 2, Main.screenHeight / 3.5))
 
     font2 = pygame.font.SysFont('comicsans', 100)
@@ -32,8 +32,7 @@ def you_win():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             win = False
-            from Main.main import main_loop
-            main_loop()
+            return
 
 
 def victory():
@@ -43,7 +42,7 @@ def victory():
     Main.LEVEL = 1
 
     font1 = pygame.font.SysFont('comicsans', 150)
-    title = font1.render("You have won the game!", 1, Main.RED)
+    title = font1.render("You have won the game", 1, Main.RED)
     Main.win.blit(title, ((Main.screenWidth - title.get_width()) / 2, Main.screenHeight / 3.5))
 
     font2 = pygame.font.SysFont('comicsans', 100)

@@ -37,5 +37,4 @@ def game_over():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
             game_over_text = False
-            from Main.main import menu
-            menu()
+            return
