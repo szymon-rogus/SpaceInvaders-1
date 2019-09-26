@@ -1,7 +1,6 @@
 # Space Invaders
 
 Made by Maciej Banaś and Szymon Rogus
-Python Project
 
 Feel free to copy and use :)
 
