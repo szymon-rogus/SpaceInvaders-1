@@ -2,7 +2,6 @@ import sys
 import pygame
 import random
 import Main
-import tkinter as tk
 from model.Boss import Boss
 from model.Cover import Cover
 from model.Player import Player
@@ -18,6 +17,7 @@ from view.next_level import you_win
 pygame.init()
 
 
+# noinspection PyInterpreter
 def button(message, x, y, w, h, color, mouse_hover, action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -29,6 +29,7 @@ def button(message, x, y, w, h, color, mouse_hover, action=None):
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
         pygame.draw.rect(Main.win, mouse_hover, (x, y, text.get_width(), h))
         if click[0] == 1 and action is not None:
+            # noinspection PyInterpreter
             if action == "main_loop":
                 main_loop()
             elif action == "quit_game":
@@ -153,32 +154,6 @@ def main_loop():
     # Ship can shoot only if this variable is equal to 0. After every successful shoot this variable is incremented,
     # and if reaches 10, then is reduced again to 0. This feature prevent from shooting all projectiles at once
     # which can cause undesirable blurred trail on screen
-    if Main.NEW_PLAYER:
-        root = tk.Tk()
-        root.title('Player Name')
-        root.geometry('300x150+500+300')
-
-        canvas = tk.Canvas(root, width=300, height=150,  relief='raised')
-        canvas.pack()
-
-        label = tk.Label(root, text='Type your Name:')
-        label.config(font=('helvetica', 12))
-        canvas.create_window(150, 50, window=label)
-
-        entry = tk.Entry(root)
-        canvas.create_window(150, 80, window=entry)
-
-        def get_square_root():
-            x1 = entry.get()
-            Main.PLAYER_NAME = x1
-            root.destroy()
-
-        button = tk.Button(text='Ok', command=get_square_root, bg='brown', fg='white', font=('helvetica', 9, 'bold'))
-        canvas.create_window(150, 120, window=button)
-
-        root.mainloop()
-
-        Main.NEW_PLAYER = False
 
     can_shoot = 0
     number = random.randint(1, 5)
@@ -315,7 +290,9 @@ def main_loop():
         elif keys[pygame.K_RIGHT] and player.x < Main.screenWidth - player.width - player.vel and not player.killed:
             player.x += player.vel
         if keys[pygame.K_SPACE] and can_shoot == 0 and not player.protection:
+            pygame.mixer.music.stop()
             Main.shoot.play()
+            pygame.mixer.music.play()
             if len(projectiles) < 12:  # up to 10 projectiles on screen at the same moment
                 projectiles.append(Projectile(round(player.x + player.width // 2),
                                               round(player.y + player.height // 2), 4, (255, 128, 0), 10))

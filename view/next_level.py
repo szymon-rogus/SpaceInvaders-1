@@ -47,7 +47,7 @@ def victory():
     Main.win.blit(description, ((Main.screenWidth - description.get_width()) / 2, Main.screenHeight / 2))
 
     font3 = pygame.font.SysFont('comicsans', 80)
-    description = font3.render("Press enter to move back to menu! " + str(Main.LEVEL), 1, Main.GREEN)
+    description = font3.render("Press enter to move back to menu!", 1, Main.GREEN)
     Main.win.blit(description, ((Main.screenWidth - description.get_width()) / 2, Main.screenHeight / 1.5))
 
     scores = Scores()
