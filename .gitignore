@@ -3,3 +3,4 @@
 /model/__pycache__/*
 /view/__pycache__/*
 /venv/*
+*.pyc
