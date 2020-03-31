@@ -1,7 +1,7 @@
 import sys
 import pygame
 import random
-import Main
+import controller
 from model.Boss import Boss
 from model.Cover import Cover
 from model.Player import Player
@@ -17,6 +17,18 @@ from view.next_level import you_win
 pygame.init()
 
 
+def check_for_boss_level():
+    if controller.LEVEL == 5:
+        controller.BOSS = True
+        pygame.mixer.music.load('../controller/sounds/boss.wav')
+    else:
+        controller.BOSS = False
+        music = pygame.mixer.music.load('../controller/sounds/music1.wav')
+
+    pygame.mixer.music.rewind()
+    pygame.mixer.music.play()
+
+
 # noinspection PyInterpreter
 def button(message, x, y, w, h, color, mouse_hover, action=None):
     mouse = pygame.mouse.get_pos()
@@ -27,7 +39,7 @@ def button(message, x, y, w, h, color, mouse_hover, action=None):
     text = font.render(message, 1, color)
 
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
-        pygame.draw.rect(Main.win, mouse_hover, (x, y, text.get_width(), h))
+        pygame.draw.rect(controller.win, mouse_hover, (x, y, text.get_width(), h))
         if click[0] == 1 and action is not None:
             # noinspection PyInterpreter
             if action == "main_loop":
@@ -42,7 +54,7 @@ def button(message, x, y, w, h, color, mouse_hover, action=None):
                 scores.show_high_scores()
 
     if flag is True:
-        Main.win.blit(text, (x, y))
+        controller.win.blit(text, (x, y))
     return flag
 
 
@@ -55,17 +67,17 @@ def menu():
                 pygame.quit()
                 sys.exit()
 
-        Main.win.blit(Main.bg, (0, 0))
+        controller.win.blit(controller.bg, (0, 0))
         font1 = pygame.font.SysFont('comicsans', 100)
-        title = font1.render("Space Invaders", 1, Main.YELLOW)
-        Main.win.blit(title, ((Main.screenWidth - title.get_width()) / 2, Main.screenHeight / 5))
+        title = font1.render("Space Invaders", 1, controller.YELLOW)
+        controller.win.blit(title, ((controller.screenWidth - title.get_width()) / 2, controller.screenHeight / 5))
 
         button_width = 200
         button_height = 50
-        button("Play", (Main.screenWidth - button_width) / 2, Main.screenHeight * 2/5, button_width, button_height, Main.WHITE, Main.GRAY, "main_loop")
-        button("Description", (Main.screenWidth - button_width) / 2, Main.screenHeight * 2.5/5, button_width, button_height, Main.WHITE, Main.GRAY, "description")
-        button("High scores", (Main.screenWidth - button_width) / 2, Main.screenHeight * 3 / 5, button_width, button_height, Main.WHITE, Main.GRAY, "high_scores")
-        intro = button("Quit", (Main.screenWidth - button_width) / 2, Main.screenHeight * 3.5/5, button_width, button_height,  Main.WHITE, Main.GRAY, "quit_game")
+        button("Play", (controller.screenWidth - button_width) / 2, controller.screenHeight * 2 / 5, button_width, button_height, controller.WHITE, controller.GRAY, "main_loop")
+        button("Description", (controller.screenWidth - button_width) / 2, controller.screenHeight * 2.5 / 5, button_width, button_height, controller.WHITE, controller.GRAY, "description")
+        button("High scores", (controller.screenWidth - button_width) / 2, controller.screenHeight * 3 / 5, button_width, button_height, controller.WHITE, controller.GRAY, "high_scores")
+        intro = button("Quit", (controller.screenWidth - button_width) / 2, controller.screenHeight * 3.5 / 5, button_width, button_height, controller.WHITE, controller.GRAY, "quit_game")
 
         pygame.display.update()
 
@@ -74,20 +86,20 @@ def menu():
 def redraw_game_window(player, enemy, special_alien, projectiles, enemy_projectiles, lives, alive, covers, boss,
                        boss_projectiles_left, boss_projectiles_right, boss_projectiles_central):
 
-    Main.win.blit(Main.bg, (0, 0))
-    player.draw(Main.win)
+    controller.win.blit(controller.bg, (0, 0))
+    player.draw(controller.win)
     for bullet in projectiles:
-        bullet.draw(Main.win)
+        bullet.draw(controller.win)
 
-    if not Main.BOSS:  # normal level without boss
+    if not controller.BOSS:  # normal level without boss
         for enemy_bullet in enemy_projectiles:
-            enemy_bullet.draw(Main.win)
+            enemy_bullet.draw(controller.win)
             player.is_player_hit(enemy_projectiles)
 
         for i in range(len(enemy)):
             for j in range(len(enemy[i])):
                 if enemy[i][j].check_collision(projectiles) is True and enemy[i][j].status is True:
-                    enemy[i][j].draw(Main.win)
+                    enemy[i][j].draw(controller.win)
                 else:
                     enemy[i][j].status = False
                     alive -= 1
@@ -95,24 +107,24 @@ def redraw_game_window(player, enemy, special_alien, projectiles, enemy_projecti
         for cover in covers:
             cover.check_collision(projectiles)
             cover.check_collision(enemy_projectiles)
-            cover.draw(Main.win)
+            cover.draw(controller.win)
 
         if special_alien.check_collision(projectiles) is True and special_alien.status is True:
-            special_alien.draw(Main.win)
+            special_alien.draw(controller.win)
         else:
             special_alien.status = False
 
     else:  # boss level
-        boss.draw(Main.win)
-        boss.check_collision(projectiles, Main.win)
+        boss.draw(controller.win)
+        boss.check_collision(projectiles, controller.win)
         for boss_bullet in boss_projectiles_left:
-            boss_bullet.draw(Main.win)
+            boss_bullet.draw(controller.win)
             player.is_player_hit(boss_projectiles_left)
         for boss_bullet in boss_projectiles_right:
-            boss_bullet.draw(Main.win)
+            boss_bullet.draw(controller.win)
             player.is_player_hit(boss_projectiles_right)
         for boss_bullet in boss_projectiles_central:
-            boss_bullet.draw(Main.win)
+            boss_bullet.draw(controller.win)
             player.is_player_hit(boss_projectiles_central)
 
         if boss.time_to_recovery > 0:
@@ -126,20 +138,20 @@ def redraw_game_window(player, enemy, special_alien, projectiles, enemy_projecti
             life_count -= 1
             if life_count < 0:
                 life.status = False
-            life.draw(Main.win)
+            life.draw(controller.win)
     else:
         you_win()
         main_loop()
 
     # display score
     score = pygame.font.SysFont('comicsans', 50)
-    description = score.render("Score: " + str(Main.SCORE), 1, Main.WHITE)
-    Main.win.blit(description, (Main.screenWidth - description.get_width() - 20, 20))
+    description = score.render("Score: " + str(controller.SCORE), 1, controller.WHITE)
+    controller.win.blit(description, (controller.screenWidth - description.get_width() - 20, 20))
 
     # display level
     level = pygame.font.SysFont('comicsans', 50)
-    lvl_description = level.render("Level: " + str(Main.LEVEL), 1, Main.WHITE)
-    Main.win.blit(lvl_description, (20, 20))
+    lvl_description = level.render("Level: " + str(controller.LEVEL), 1, controller.WHITE)
+    controller.win.blit(lvl_description, (20, 20))
 
     if player.health < 1:
         game_over()
@@ -157,17 +169,17 @@ def main_loop():
 
     can_shoot = 0
     number = random.randint(1, 5)
-    Main.bg = pygame.image.load('../model/img/big_sky' + str(number) + '.jpg')
-    frequency_of_alien_shooting = 111 - Main.LEVEL * 10
+    controller.bg = pygame.image.load('../model/img/big_sky' + str(number) + '.jpg')
+    frequency_of_alien_shooting = 111 - controller.LEVEL * 10
     frequency_of_boss_shooting = 30
     frequency_of_boss_special_shooting = 70
 
-    player = Player(20, Main.screenHeight - 100, 60, 60)
+    player = Player(20, controller.screenHeight - 100, 60, 60)
     enemy = [[None] * 10, [None] * 10, [None] * 10]
     alive = len(enemy) * len(enemy[0])
     enemy = draw_block_of_enemies(enemy)
-    special_alien = SpecialEnemy(0, 60, Main.alien_size, Main.alien_size, 0, Main.screenWidth, False)
-    boss = Boss(10, 100, 320, 100, 30, Main.screenWidth - 330)
+    special_alien = SpecialEnemy(0, 60, controller.alien_size, controller.alien_size, 0, controller.screenWidth, False)
+    boss = Boss(10, 100, 320, 100, 30, controller.screenWidth - 330)
 
     lives = [None, None, None]
     lives = life_draw(lives)
@@ -181,22 +193,16 @@ def main_loop():
     covers = []
     cover_number = 1
     while cover_number <= 3:
-        cover = Cover(Main.screenWidth * ((2*cover_number-1) / 7), Main.screenHeight * (8 / 10))
+        cover = Cover(controller.screenWidth * ((2 * cover_number - 1) / 7), controller.screenHeight * (8 / 10))
         covers.append(cover)
         cover_number += 1
 
-    pygame.mixer.music.rewind()
-    pygame.mixer.music.play()
-
-    if Main.LEVEL == 5:
-        Main.BOSS = True
-    else:
-        Main.BOSS = False
+    check_for_boss_level()
 
     run = True
     paused = False
     while run:
-        Main.clock.tick(30)  # fps
+        controller.clock.tick(30)  # fps
         # always possible to exit game at any time
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -205,14 +211,14 @@ def main_loop():
                 sys.exit()
 
         # normal level without a boss
-        if not Main.BOSS:
+        if not controller.BOSS:
             special = random.randint(1, 500)
-            if special == 10 and Main.SPECIAL == 0:
+            if special == 10 and controller.SPECIAL == 0:
                 special_alien.status = True
-                Main.SPECIAL += 1
-            if special_alien.status is False and Main.SPECIAL == 1:
-                Main.SPECIAL = 0
-                special_alien = SpecialEnemy(0, 60, 60, 60, 0, Main.screenWidth, False)
+                controller.SPECIAL += 1
+            if special_alien.status is False and controller.SPECIAL == 1:
+                controller.SPECIAL = 0
+                special_alien = SpecialEnemy(0, 60, 60, 60, 0, controller.screenWidth, False)
 
             enemy_shot = random.randint(1, frequency_of_alien_shooting)
             enemy_x = random.randint(0, 9)
@@ -228,7 +234,7 @@ def main_loop():
                 enemy_projectiles.append(
                     Projectile(round(enemy[enemy_y][enemy_x].x + enemy[enemy_y][enemy_x].width // 2),
                                round(enemy[enemy_y][enemy_x].y + enemy[enemy_y][enemy_x].height // 2),
-                               4, Main.GREEN, 10))
+                               4, controller.GREEN, 10))
             elif enemy[enemy_y][enemy_x].status is False and frequency_of_alien_shooting > 10:
                 frequency_of_alien_shooting -= 1
 
@@ -238,21 +244,21 @@ def main_loop():
             boss_shoot_side = random.randint(1, frequency_of_boss_shooting)
             if boss_shoot_side == 10:
                 boss_projectiles_left.append(Projectile(round(boss.x + boss.width * (1/4)),
-                                             round(boss.y + boss.height // 2, 10),
-                                             6, Main.GREEN, 10))
+                                                        round(boss.y + boss.height // 2, 10),
+                                                        6, controller.GREEN, 10))
                 boss_projectiles_right.append(Projectile(round(boss.x + boss.width * (3 / 4)),
                                                          round(boss.y + boss.height // 2),
-                                                         6, Main.GREEN, 10))
+                                                         6, controller.GREEN, 10))
                 boss_projectiles_central.append(Projectile(round(boss.x + boss.width * (1 / 4)),
                                                            round(boss.y + boss.height // 2, 10),
-                                                           6, Main.GREEN, 10))
+                                                           6, controller.GREEN, 10))
                 boss_projectiles_central.append(Projectile(round(boss.x + boss.width * (3 / 4)),
                                                            round(boss.y + boss.height // 2),
-                                                           6, Main.GREEN, 10))
+                                                           6, controller.GREEN, 10))
             if boss_shoot_central == 20:
                 boss_projectiles_central.append(Projectile(round(boss.x + boss.width * (1/2)),
-                                                round(boss.y + boss.height * (3/4)),
-                                                20, Main.ORANGE, 20))
+                                                           round(boss.y + boss.height * (3/4)),
+                                                           20, controller.ORANGE, 20))
             for boss_projectile in boss_projectiles_left:
                 if 0 < boss_projectile.y > 0:
                     boss_projectile.x -= boss_projectile.vel / 1.5
@@ -280,18 +286,18 @@ def main_loop():
                 projectiles.pop(projectiles.index(projectile))
         if can_shoot > 0:
             can_shoot += 1
-        if can_shoot >= 21 - Main.LEVEL:
+        if can_shoot >= 21 - controller.LEVEL:
             can_shoot = 0
 
         # handle keys pressed by player (left arrow, right arrow, space)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] and player.x > player.vel and not player.killed:
             player.x -= player.vel
-        elif keys[pygame.K_RIGHT] and player.x < Main.screenWidth - player.width - player.vel and not player.killed:
+        elif keys[pygame.K_RIGHT] and player.x < controller.screenWidth - player.width - player.vel and not player.killed:
             player.x += player.vel
         if keys[pygame.K_SPACE] and can_shoot == 0 and not player.protection:
             pygame.mixer.music.stop()
-            Main.shoot.play()
+            controller.shoot.play()
             pygame.mixer.music.play()
             if len(projectiles) < 12:  # up to 10 projectiles on screen at the same moment
                 projectiles.append(Projectile(round(player.x + player.width // 2),
@@ -300,8 +306,8 @@ def main_loop():
         if keys[pygame.K_ESCAPE]:
             run = False
             paused = True
-            Main.SCORE = 0
-            Main.LEVEL = 1
+            controller.SCORE = 0
+            controller.LEVEL = 1
             Player.health = 3
             menu()
         if keys[pygame.K_p]:

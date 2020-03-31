@@ -1,7 +1,7 @@
 import csv
 import sys
 import pygame
-import Main
+import controller
 
 
 class Scores(object):
@@ -12,7 +12,7 @@ class Scores(object):
     def show_high_scores(self):
         loop = True
         while loop:
-            Main.win.blit(Main.bg, (0, 0))
+            controller.win.blit(controller.bg, (0, 0))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -24,16 +24,16 @@ class Scores(object):
                 loop = False
 
             font1 = pygame.font.SysFont('comicsans', 100)
-            title = font1.render("High scores:", 1, Main.WHITE)
-            Main.win.blit(title, ((Main.screenWidth - title.get_width()) / 2, Main.screenHeight / 10))
+            title = font1.render("High scores:", 1, controller.WHITE)
+            controller.win.blit(title, ((controller.screenWidth - title.get_width()) / 2, controller.screenHeight / 10))
 
             score_number = 1
             font2 = pygame.font.SysFont('comicsans', 50)
             for record in self.list_of_scores:
-                player = font2.render(record[0], 1, Main.WHITE)
-                score = font2.render(record[1], 1, Main.YELLOW)
-                Main.win.blit(player, ((Main.screenWidth - title.get_width()) / 2, Main.screenHeight * ((3+score_number)/15)))
-                Main.win.blit(score, (Main.screenWidth / 2, Main.screenHeight * ((3 + score_number) / 15)))
+                player = font2.render(record[0], 1, controller.WHITE)
+                score = font2.render(record[1], 1, controller.YELLOW)
+                controller.win.blit(player, ((controller.screenWidth - title.get_width()) / 2, controller.screenHeight * ((3 + score_number) / 15)))
+                controller.win.blit(score, (controller.screenWidth / 2, controller.screenHeight * ((3 + score_number) / 15)))
                 score_number += 1
 
             pygame.display.update()

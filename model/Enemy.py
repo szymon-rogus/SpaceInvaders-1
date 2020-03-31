@@ -1,6 +1,6 @@
 import pygame
 import random
-import Main
+import controller
 from view.game_over import game_over
 
 
@@ -16,7 +16,7 @@ class Enemy(object):
         self.start = start
         self.end = end
         self.path = [self.start, self.end]  # where our enemy starts and finishes his path.
-        self.vel = Main.LEVEL
+        self.vel = controller.LEVEL
         self.status = True  # death or alive
         self.type = random.randint(0, 1)
 
@@ -47,7 +47,7 @@ class Enemy(object):
             else:
                 self.y += 20
                 self.vel = self.vel * -1
-        if self.y + Main.alien_size > 0.8 * Main.screenHeight:
+        if self.y + controller.alien_size > 0.8 * controller.screenHeight:
             game_over()
 
     # for every foe check collision with projectiles on screen
@@ -57,7 +57,7 @@ class Enemy(object):
             if self.x <= projectile.x <= self.x + 60 and self.status is True:
                 if self.y <= projectile.y <= self.y + 40:
                     invader_killed.play()
-                    Main.SCORE += 10
+                    controller.SCORE += 10
                     projectiles.pop(projectiles.index(projectile))
                     return False
         return True

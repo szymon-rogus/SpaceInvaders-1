@@ -1,5 +1,5 @@
 import pygame
-import Main
+import controller
 
 
 class SpecialEnemy(object):
@@ -32,7 +32,7 @@ class SpecialEnemy(object):
             if self.x <= projectile.x <= self.x + 60 and self.status is True:
                 if self.y <= projectile.y <= self.y + 50:
                     invader_killed.play()
-                    Main.SCORE += 100
+                    controller.SCORE += 100
                     projectiles.pop(projectiles.index(projectile))
                     return False
         return True

@@ -1,26 +1,26 @@
 import sys
 import pygame
-import Main
+import controller
 from view.scores import Scores
 
 
 def you_win():
 
-    Main.LEVEL += 1
+    controller.LEVEL += 1
 
     font1 = pygame.font.SysFont('comicsans', 150)
-    title = font1.render("Victory", 1, Main.RED)
-    Main.win.blit(title, ((Main.screenWidth - title.get_width()) / 2, Main.screenHeight / 3.5))
+    title = font1.render("Victory", 1, controller.RED)
+    controller.win.blit(title, ((controller.screenWidth - title.get_width()) / 2, controller.screenHeight / 3.5))
 
     font2 = pygame.font.SysFont('comicsans', 100)
-    description = font2.render("Your score: " + str(Main.SCORE), 1, Main.WHITE)
-    Main.win.blit(description, ((Main.screenWidth - description.get_width()) / 2, Main.screenHeight / 2))
+    description = font2.render("Your score: " + str(controller.SCORE), 1, controller.WHITE)
+    controller.win.blit(description, ((controller.screenWidth - description.get_width()) / 2, controller.screenHeight / 2))
 
     font3 = pygame.font.SysFont('comicsans', 80)
-    description = font3.render("Press enter to move to level " + str(Main.LEVEL), 1, Main.GREEN)
-    Main.win.blit(description, ((Main.screenWidth - description.get_width()) / 2, Main.screenHeight / 1.5))
+    description = font3.render("Press enter to move to level " + str(controller.LEVEL), 1, controller.GREEN)
+    controller.win.blit(description, ((controller.screenWidth - description.get_width()) / 2, controller.screenHeight / 1.5))
 
-    # Main.SCORE = 0
+    # controller.SCORE = 0
     pygame.display.update()
 
     while True:
@@ -35,25 +35,25 @@ def you_win():
 
 def victory():
 
-    Main.NEW_PLAYER = True
-    Main.LEVEL = 1
+    controller.NEW_PLAYER = True
+    controller.LEVEL = 1
 
     font1 = pygame.font.SysFont('comicsans', 150)
-    title = font1.render("You have won the game", 1, Main.RED)
-    Main.win.blit(title, ((Main.screenWidth - title.get_width()) / 2, Main.screenHeight / 3.5))
+    title = font1.render("You have won the game", 1, controller.RED)
+    controller.win.blit(title, ((controller.screenWidth - title.get_width()) / 2, controller.screenHeight / 3.5))
 
     font2 = pygame.font.SysFont('comicsans', 100)
-    description = font2.render("Your score: " + str(Main.SCORE), 1, Main.WHITE)
-    Main.win.blit(description, ((Main.screenWidth - description.get_width()) / 2, Main.screenHeight / 2))
+    description = font2.render("Your score: " + str(controller.SCORE), 1, controller.WHITE)
+    controller.win.blit(description, ((controller.screenWidth - description.get_width()) / 2, controller.screenHeight / 2))
 
     font3 = pygame.font.SysFont('comicsans', 80)
-    description = font3.render("Press enter to move back to menu!", 1, Main.GREEN)
-    Main.win.blit(description, ((Main.screenWidth - description.get_width()) / 2, Main.screenHeight / 1.5))
+    description = font3.render("Press enter to move back to menu!", 1, controller.GREEN)
+    controller.win.blit(description, ((controller.screenWidth - description.get_width()) / 2, controller.screenHeight / 1.5))
 
     scores = Scores()
-    scores.save_score([Main.PLAYER_NAME, str(Main.SCORE)])
+    scores.save_score([controller.PLAYER_NAME, str(controller.SCORE)])
 
-    Main.SCORE = 0
+    controller.SCORE = 0
     pygame.display.update()
 
     while True:
@@ -64,5 +64,5 @@ def victory():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             # should actually show credits or final score and go back to menu then
-            from Main.main import menu
+            from controller.main import menu
             menu()

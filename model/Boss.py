@@ -1,5 +1,5 @@
 import pygame
-import Main
+import controller
 import random
 from view import next_level
 
@@ -15,7 +15,7 @@ class Boss(object):
         self.health = 10
         self.start = start
         self.end = end
-        self.path = [self.start, self.end, 100, Main.screenHeight - 350]  # where our enemy starts and finishes his path
+        self.path = [self.start, self.end, 100, controller.screenHeight - 350]  # where our enemy starts and finishes his path
         self.vel_x = 5
         self.vel_y = 5
         self.time_to_recovery = 0
@@ -82,15 +82,15 @@ class Boss(object):
                     if self.y <= projectile.y <= self.y + self.height:
                         projectiles.pop(projectiles.index(projectile))
                         if not self.protected:
-                            Main.SCORE += 10
+                            controller.SCORE += 10
                             self.health -= 1
                             self.protected = True
                             self.time_to_recovery = 30
             if self.health <= 0:
                 self.draw(win)
                 pygame.display.update()
-                Main.SCORE += 1000
-                explosion = pygame.mixer.Sound('../Main/sounds/explosion.wav')
+                controller.SCORE += 1000
+                explosion = pygame.mixer.Sound('../controller/sounds/explosion.wav')
                 explosion.play()
                 next_level.victory()
 
